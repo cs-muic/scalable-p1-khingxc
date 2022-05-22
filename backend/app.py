@@ -1,5 +1,4 @@
 import json
-
 import sqlalchemy
 from flask import Flask, request, jsonify
 from sqlalchemy.ext.declarative import declarative_base
@@ -37,7 +36,6 @@ def add_new_paste(title: str, content: str, created_at: DateTime):
     new_paste = Pastebin(title, content, created_at)
     session.add(new_paste)
     session.commit()
-    print(new_paste.id)
     return new_paste.id
 
 
@@ -55,7 +53,7 @@ def get_latest_hundred():
 def paste():
     response = {}
     try:
-        date_time = (datetime.now()).replace(microsecond=0)
+        date_time = (datetime.utcnow()).replace(microsecond=0)
         returned_id = add_new_paste(request.json["title"],
                                     request.json["content"],
                                     date_time)
