@@ -51,15 +51,16 @@ def get_latest_hundred():
 
 @app.route("/api/paste", methods=['POST'])
 def paste():
-    response = {}
     try:
+        title = request.json["title"]
+        content = request.json["content"]
         date_time = (datetime.utcnow()).replace(microsecond=0)
-        returned_id = add_new_paste(request.json["title"],
-                                    request.json["content"],
+        returned_id = add_new_paste(title,
+                                    content,
                                     date_time)
-        response["id"] = str(returned_id)
+        response = {"id": str(returned_id)}
     except:
-        response["error"] = "failed to create a paste due to some missing data"
+        response = {"error": "failed to create a paste due to some missing data"}
     if "id" in response:
         return jsonify(response), 200
     else:
