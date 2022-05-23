@@ -17,7 +17,7 @@ Base = declarative_base()
 
 class Pastebin(Base):
     __tablename__ = 'pastebin'
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     title = sqlalchemy.Column(sqlalchemy.String(length=100))
     content = sqlalchemy.Column(Text)
     created_at = sqlalchemy.Column(DateTime)
@@ -33,10 +33,10 @@ session = Session()
 
 
 def add_new_paste(title: str, content: str, created_at: DateTime):
-    new_paste = Pastebin(title, content, created_at)
+    new_paste = Pastebin(title=title, content=content, created_at=created_at)
     session.add(new_paste)
     session.commit()
-    return new_paste.id
+    return str(new_paste.id)
 
 
 def get_latest_hundred():
@@ -54,11 +54,11 @@ def paste():
     try:
         title = request.json["title"]
         content = request.json["content"]
-        date_time = (datetime.utcnow()).replace(microsecond=0)
+        date_time = datetime.utcnow()
         returned_id = add_new_paste(title,
                                     content,
-                                    date_time)
-        response = {"id": str(returned_id)}
+                                    date_time.replace(microsecond=0))
+        response = {"id": returned_id}
     except:
         response = {"error": "failed to create a paste due to some missing data"}
     if "id" in response:
@@ -81,5 +81,3 @@ def search_from_id(ID):
 @app.route("/api/recents", methods=['POST'])
 def recents():
     return json.dumps(get_latest_hundred())
-
-# app.run()
