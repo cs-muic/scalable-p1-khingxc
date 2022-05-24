@@ -17,7 +17,7 @@ Base = declarative_base()
 
 class Pastebin(Base):
     __tablename__ = 'pastebin'
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
     title = sqlalchemy.Column(sqlalchemy.String(length=100))
     content = sqlalchemy.Column(Text)
     created_at = sqlalchemy.Column(DateTime)
