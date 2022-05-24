@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pastebin-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api/paste
+        pathType: Exact
+        backend:
+          service:
+            name: pastebin-backend
+            port:
+              number: 80
+      - path: /api/recents
+        pathType: Prefix
+        backend:
+          service:
+            name: pastebin-backend
+            port:
+              number: 80

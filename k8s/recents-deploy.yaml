@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recents-backend
+  labels:
+    app: recents-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recents-backend
+  template:
+    metadata:
+      labels:
+        app: recents-backend
+    spec:
+      containers:
+      - name: recents-backend
+        image: ghcr.io/cs-muic/scalable-p1-khingxc/pastebin-backend:latest
+        env:
+        - name: ELASTIC_HOST
+          value: elasticsearch.default.svc

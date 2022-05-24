@@ -34,4 +34,3 @@ jobs:
       run: | 
         docker push ghcr.io/${{ env.BASE_IMG_NAME }}/pastebin-backend:${{ steps.vars.outputs.sha_short }}
         docker push ghcr.io/${{ env.BASE_IMG_NAME }}/pastebin-backend:latest
-
