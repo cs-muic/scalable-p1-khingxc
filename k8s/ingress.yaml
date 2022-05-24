@@ -8,17 +8,17 @@ spec:
   rules:
   - http:
       paths:
-      - path: /api/paste
+      - path: /api/recents
         pathType: Exact
         backend:
           service:
-            name: pastebin-backend
+            name: recents-backend
             port:
               number: 80
-      - path: /api/recents
+      - path: /api/
         pathType: Prefix
         backend:
           service:
-            name: pastebin-backend
+            name: all-apis-backend
             port:
               number: 80
