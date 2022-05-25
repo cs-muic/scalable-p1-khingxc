@@ -7,7 +7,7 @@ from sqlalchemy import DateTime
 from datetime import datetime
 
 app = Flask(__name__)
-app.config["DEBUG"] = True
+# app.config["DEBUG"] = True
 
 # Define the MariaDB engine using MariaDB Connector/Python
 engine = sqlalchemy.create_engine("mariadb+mariadbconnector://root:hardpass@127.0.0.1:3307/pastebin")
