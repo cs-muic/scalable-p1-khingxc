@@ -81,4 +81,4 @@ def search_from_id(ID):
 def recents():
     return json.dumps(get_latest_hundred())
 
-app.run()
+app.run(host='0.0.0.0',port=5000)
