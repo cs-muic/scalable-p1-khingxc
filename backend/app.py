@@ -81,4 +81,6 @@ def search_from_id(ID):
 def recents():
     return json.dumps(get_latest_hundred())
 
-app.run(host='0.0.0.0',port=5000)
+if __name__ == "__main__":
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=5000)
