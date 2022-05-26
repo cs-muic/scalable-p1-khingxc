@@ -2,7 +2,7 @@ import os
 import json
 import sqlalchemy
 from flask import Flask, request, jsonify
-from sqlalchemy.ext.declarative import declarative_base
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Text
 from sqlalchemy import DateTime
 from datetime import datetime
@@ -18,35 +18,28 @@ if not database_exists(url):
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = url
-Base = declarative_base()
+db = SQLAlchemy(app)
 
 
-class Pastebin(Base):
+class Pastebin(db.Model):
     __tablename__ = 'pastebin'
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
-    title = sqlalchemy.Column(sqlalchemy.String(length=100))
-    content = sqlalchemy.Column(Text)
-    created_at = sqlalchemy.Column(DateTime)
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(length=100))
+    content = db.Column(Text)
+    created_at = db.Column(DateTime)
 
 
-Base.metadata.create_all(engine)
-
-
-# Create a session
-Session = sqlalchemy.orm.sessionmaker()
-Session.configure(bind=engine)
-session = Session()
-
+db.create_all()
 
 def add_new_paste(title: str, content: str, created_at: DateTime):
     new_paste = Pastebin(title=title, content=content, created_at=created_at)
-    session.add(new_paste)
-    session.commit()
+    db.session.add(new_paste)
+    db.session.commit()
     return str(new_paste.id)
 
 
 def get_latest_hundred():
-    latest_hundred = session.query(Pastebin).order_by(Pastebin.created_at.desc()).limit(100)
+    latest_hundred = Pastebin.query.order_by(Pastebin.created_at.desc()).limit(100)
     data_list = []
     for the_paste in latest_hundred:
         data_list.append({"title": the_paste.title,
@@ -75,7 +68,7 @@ def paste():
 
 @app.route("/api/<ID>", methods=['GET'])
 def search_from_id(ID):
-    response = session.query(Pastebin).get(ID)
+    response = Pastebin.query.get(ID)
     if response is None:
         return jsonify({}), 404
     else:
