@@ -80,3 +80,5 @@ def search_from_id(ID):
 @app.route("/api/recents", methods=['POST'])
 def recents():
     return json.dumps(get_latest_hundred())
+
+app.run()
