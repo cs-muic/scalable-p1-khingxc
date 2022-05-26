@@ -28,12 +28,12 @@ spec:
                 name: secret
                 key: password
         ports:
-        - containerPort: 3307
+        - containerPort: 3306
           name: mariadb
         volumeMounts:
-        - name: mariadb-persistent-storage
+        - name: persistence-volume
           mountPath: /var/lib/mariadb
       volumes:
-      - name: mariadb-persistent-storage
+      - name: persistence-volume
         persistentVolumeClaim:
-          claimName: mariadb-pv-claim
+          claimName: persistence-volume-claim

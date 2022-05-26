@@ -5,7 +5,7 @@ metadata:
   labels:
     app: all-apis-backend
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: all-apis-backend
@@ -18,5 +18,20 @@ spec:
       - name: all-apis-backend
         image: ghcr.io/cs-muic/scalable-p1-khingxc/pastebin-backend:latest
         env:
-        - name: ELASTIC_HOST
-          value: elasticsearch.default.svc
+        - name: MARIADB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: secret
+              key: user
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret
+              key: password
+        - name: MARIADB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: mariadb-config
+              key: mariadb-url
+      imagePullSecrets:
+        - name: dockerconfigjson-github-com
