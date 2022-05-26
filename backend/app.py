@@ -1,3 +1,4 @@
+import os
 import json
 import sqlalchemy
 from flask import Flask, request, jsonify
@@ -5,13 +6,18 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Text
 from sqlalchemy import DateTime
 from datetime import datetime
+from sqlalchemy_utils import database_exists, create_database
 
-app = Flask(__name__)
 # app.config["DEBUG"] = True
 
 # Define the MariaDB engine using MariaDB Connector/Python
-engine = sqlalchemy.create_engine("mariadb+mariadbconnector://root:hardpass@127.0.0.1:3307/pastebin")
+url = "mariadb+mariadbconnector://" + os.environ['MARIADB_ROOT_USERNAME'] + ":" + os.environ['MARIADB_ROOT_PASSWORD'] + "@" + os.environ['MARIADB_DATABASE'] + "/pastebin"
 
+if not database_exists(url):
+    create_database(url)
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = url
 Base = declarative_base()
 
 
