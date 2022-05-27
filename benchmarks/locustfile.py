@@ -1,6 +1,6 @@
 from locust import HttpUser, task
 
-id = 0
+id = 1
 
 class Benchmarks(HttpUser):
 
