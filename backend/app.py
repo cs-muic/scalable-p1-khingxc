@@ -3,12 +3,14 @@ import json
 import sqlalchemy
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_caching import Cache
 from sqlalchemy import Text
 from sqlalchemy import DateTime
 from datetime import datetime
 from sqlalchemy_utils import database_exists, create_database
 
 # app.config["DEBUG"] = True
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
 
 # Define the MariaDB engine using MariaDB Connector/Python
 url = "mariadb+mariadbconnector://" + os.environ['MARIADB_ROOT_USERNAME'] + ":" + os.environ['MARIADB_ROOT_PASSWORD'] + "@" + os.environ['MARIADB_DATABASE'] + "/pastebin"
@@ -18,6 +20,7 @@ if not database_exists(url):
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = url
+cache.init_app(app)
 db = SQLAlchemy(app)
 
 
@@ -78,6 +81,7 @@ def search_from_id(ID):
 
 
 @app.route("/api/recents", methods=['POST'])
+@cache.cached()
 def recents():
     return json.dumps(get_latest_hundred())
 
